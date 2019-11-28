@@ -19,7 +19,7 @@ class CreateGamesTable extends Migration
             $table->unsignedSmallInteger('map_type');
             $table->unsignedBigInteger('user_id');
 
-            $table->foreign('user_id')->references('users')->on('id');
+            $table->foreign('user_id')->references('id')->on('users');
         });
     }
 
