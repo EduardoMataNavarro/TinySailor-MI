@@ -11,11 +11,14 @@
     </head>
     <body>
         <!-- Launch Menu -->
+        <audio id="ambient-sound">
+            <source src="{{ asset('audio/Caketown.mp3') }}" type="audio/mpeg">
+        </audio>
 	    <div id="launch-menu">
             <div class="container">
                 <img src="{{ asset('img/TinyLogo.png') }}" alt="Tiny sailor image" class="tiny-logo">
                 <button class="launch-menu-button gameType-buttons" gameType="singleplayer">Play</button>
-                <button class="launch-menu-button gameType-buttons" gameType="multiplayer">Puntuaciones</button>
+                <button class="launch-menu-button gameType-buttons" onclick="location.href = '/getscores'" gameType="multiplayer">Puntuaciones</button>
                 <button class="launch-menu-button gameType-buttons" gameType="">Return</button>
 
                 <button class="launch-menu-button difficulty-buttons" gameStage=0>Stage 1</button>
@@ -33,6 +36,11 @@
             <button class="launch-menu-button">Continuar</button>
             <button class="launch-menu-button">Regresar</button>
         </div>
+        <div id="ingame-layout" class="container-fluid">
+            <div class="score">
+                
+            </div>
+        </div>
     </body>
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
@@ -49,24 +57,27 @@
     <script src="{{ asset('js/Scene/Water.js') }}"></script>
     <script src="{{ asset('js/Scene/Rain.js') }}"></script>
     <script src="{{ asset('js/Scene/GameScene.js') }}"></script>
-    <script src="{{ asset('js/FacebookShare.js') }}"></script>
+    <!-- <script src="{{ asset('js/FacebookShare.js') }}"></script> -->
+    <script src="{{ asset('js/GameManager.js') }}"></script>
 
     <script type="text/javascript">
+        var gameStage = 3;
         var gameType = "";
+        var startGame = false;
+
         $('.gameType-buttons').click(function(){
-                gameType = $(this).attr('gameType');
-                console.log(gameType);
-                if (gameType != '') {
-                    $('.gameType-buttons').toggle();
-                    $('.difficulty-buttons').toggle();
-                }
+            gameType = $(this).attr('gameType');
+            console.log(gameType);
+            if (gameType != '') {
+                $('.gameType-buttons').toggle();
+                $('.difficulty-buttons').toggle();
+            }
         });
 
-        var gameStage = 3;
-        var startGame = false;
         $('.difficulty-buttons').click(function(){
-            gameStage = $(this).attr('gameStage');
+            gameStage = parseInt($(this).attr('gameStage'));
             startGame = true;
+            console.log("Stage: " + gameStage + "  Start game: " + startGame);
             $.ajax({
                 url: '/creategame',
                 method: 'POST',
@@ -77,49 +88,42 @@
                 success: function(result){
                     localStorage.setItem('gameId', result.id);
                 }
-            });
+            }).fail(function(result) { console.log(result); });
 
+            InitGame(gameStage);
             $('#launch-menu').toggle();
             $('#pause-button').toggle();
-
         });
 
         $('#pause-button').click(function(){
             $('#pause-menu').toggle(); 
         });
-
-            var renderer = new THREE.WebGLRenderer();
-            renderer.setClearColor(new THREE.Color(0.1, 0.25, 0.74));
-            renderer.setSize( window.innerWidth, window.innerHeight );
-
-            console.log(window.innerWidth + " / " + window.innerHeight)
-            document.body.appendChild( renderer.domElement );
-            
-            var scene = new GameScene(gameStage, 0xf7feff, 0xfafeff, window, [0, 10, -2]);
-            scene.buildScene(scene);    
         
-        
-            $(document).keydown(function(e){
-                e.preventDefault();
-                if (scene.boatA && scene.boatB) {   
+        $(document).keydown(function(e){
+            e.preventDefault();
+            if (scene) {
+                if (scene.boatA && scene.boatB) {  
+                    
+                    scene.boatA.prevDirection = scene.boatA.direction;
+                    scene.boatA.prevRotation = scene.boatA.rotation;
+
+                    scene.boatB.prevDirection = scene.boatB.direction;
+                    scene.boatB.prevRotation = scene.boatB.rotation;
+
                     switch (e.which) {
 
                         /* Player 0 controls */
                         case 87: /* W */
                             scene.boatA.direction = "forward";
-                            //scene.boat0.getBoat().direction = "forward";
                             break;
                         case 83: /* S */
                             scene.boatA.direction = "backward";
-                            //scene.boat0.getBoat().direction = "backward";
                             break;
                         case 65: /* A */
                             scene.boatA.rotation = "right";
-                            //scene.boat0.getBoat().rotation = "right";
                             break;
                         case 68: /* D */
                             scene.boatA.rotation = "left";
-                            //scene.boat0.getBoat().rotation = "left";
                             break; 
 
                         /* Player 1 controls */
@@ -129,50 +133,16 @@
                         case 40: /* KeyDown */
                             scene.boatB.direction = "backward";
                             break;
-                        case 39: /* KeyRight */
+                        case 37: /* KeyRight */
                             scene.boatB.rotation = "right";
                             break;
-                        case 37: /* KeyLeft */
+                        case 39: /* KeyLeft */
                             scene.boatB.rotation = "left"; 
                             break;
                     }
                 }
-            });
-        var animate = function () {
-            renderer.setViewport(1, 1, 0.5 * window.innerWidth - 2, window.innerHeight);
-            renderer.setScissor(1, 1, 0.5 * window.innerWidth - 2, window.innerHeight);
-            renderer.setScissorTest(true);
-            scene.camera0.updateProjectionMatrix();
-            renderer.render(scene.getScene(), scene.getCamera0());
-
-            renderer.setViewport(0.5 * window.innerWidth + 1, 1, 0.5 * window.innerWidth - 2, window.innerHeight);
-            renderer.setScissor(0.5 * window.innerWidth + 1, 1, 0.5 * window.innerWidth - 2, window.innerHeight);
-            renderer.setScissorTest(true);
-            scene.camera1.updateProjectionMatrix();
-
-             
-            if (scene.rain) {
-                scene.rain.makeItRain(scene.clock.getDelta());
             }
-            if (scene.boatA && scene.boatB && scene.dockA && scene.dockB && 
-                (scene.stonesPositions.length > 0 || scene.stonesPositions) && 
-                scene.stone)
-            {
-                if (!scene.isGameFinished) {    
-                    scene.updateModels(); 
-                    scene.checkCollisions();
-                }
-                else {
-                    
-                    var winner = scene.checkForWinner();
-                    alert(winner + " ha ganado la partida");
-                    ShareScore(scene.boatA.score, scene.boatB.score);
-                }
-            }
-
-            renderer.render( scene.getScene(), scene.getCamera1());            
-            requestAnimationFrame( animate );
-        };
-        animate();
+        });
+        renderCycle();
     </script>
 </html>

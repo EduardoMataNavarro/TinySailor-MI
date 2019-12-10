@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use App\game_player;
+use App\Game;
 
 class GameController extends Controller
 {
@@ -13,11 +15,11 @@ class GameController extends Controller
     }
 
     public function GetScores(){
-        $scores = game_player::selectRaw('game_players.game_id, 
+        $puntuaciones = game_player::selectRaw('game_players.game_id, 
                                           game_players.score, 
                                           game_players.player_id,
                                           users.name')
-                                        ->join('games', 'game.id', '=', 'game_player.game_id')
+                                        ->join('games', 'games.id', '=', 'game_players.game_id')
                                         ->join('users', 'users.id', '=', 'games.user_id')
                                         ->orderBy('score', 'desc')
                                         ->get();
@@ -35,8 +37,8 @@ class GameController extends Controller
     public function CreateGame(Request $request){
         $game = Game::create([
             'map_type' => $request->input('mapType'),
-            'user_id' => Auth::user()->id,
+            'user_id' => Auth::user()->id, 
         ]); 
-        return response()->json([$game]);
+        return response()->json(['game' => $game]);
     }
 }

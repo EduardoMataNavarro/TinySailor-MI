@@ -17,21 +17,20 @@ class Terrain{
     }
 
     static createTerrain(_scene, _map, _dmaps, _dirL, _ambColor, _camerapos, _scaleY){
-        Terrain.loadImage(_map, _scaleY).then(function(newTerrain){
-            _scene.terrain = newTerrain;
-            _scene.terrain.mesh = newTerrain.loadMaps(_map, _dmaps, _dirL, _ambColor, _camerapos);
-            _scene.terrain.mesh.scale.set(1, _scaleY, 1);
-            _scene.add(newTerrain.getTerrain());
+        Terrain.loadImage(_map, _scaleY).then(function(terrain){
+            _scene.terrain = terrain.loadMaps(_map, _dmaps, _dirL, _ambColor, _camerapos);
+            _scene.add(_scene.terrain);
+        }).catch(function(error){
+            console.log("No se ha podido generar el terreno " + error);
         });
     }
     static loadImage(srcImg, _scaleY){
         return new Promise(function(resolve, reject){
-            let img = new Image();
+            
+            var img = new Image();
             img.src = srcImg;
 
             img.onload = function() {
-                console.log("Cargando heightmap...");
-
                 let imgW = img.width;
                 let imgH = img.height;
 
@@ -45,6 +44,7 @@ class Terrain{
                 let pixels = imgData.data;
 
                 let imgSize = imgW * imgH;
+
                 var newTerrain = new Terrain(imgW, imgH, _scaleY);
                 for (let i = 0; i < imgSize; i++) {
                     newTerrain.geometry.attributes.position.array[i * 3 + 1] = pixels[i * 4] / 256;
@@ -62,6 +62,7 @@ class Terrain{
         let texture2 = new THREE.TextureLoader().load(_dmaps[2]);
         let heightMap = new THREE.TextureLoader().load(_map);
 
+        
         texture0.repeat.set(32, 32);
         texture1.repeat.set(32, 32);
         texture2.repeat.set(32, 32);
@@ -69,9 +70,10 @@ class Terrain{
         texture0.wrapS = texture0.wrapT = THREE.RepeatWrapping;
         texture1.wrapS = texture1.wrapT = THREE.RepeatWrapping;
         texture2.wrapS = texture2.wrapT = THREE.RepeatWrapping;
+    
 
-        this.geometry.computeBoundingSphere();
-        this.geometry.computeBoundingBox();
+        /*this.geometry.computeBoundingSphere();
+        this.geometry.computeBoundingBox();*/
         this.geometry.computeVertexNormals();
 
         let customUniforms = {
@@ -88,10 +90,13 @@ class Terrain{
         let customMaterial = new THREE.ShaderMaterial({
             uniforms: customUniforms,
             vertexShader: this.vertexShader(),
-            fragmentShader: this.fragmentShader()
+            fragmentShader: this.fragmentShader(),
         });
 
         this.mesh = new THREE.Mesh(this.geometry, customMaterial);
+        this.mesh.scale.set(1, this.scaleY, 1);
+        this.mesh.position.x = this.width / 2.0;
+        this.mesh.position.z = this.height / 2.0;
         return this.mesh;
     }
 
@@ -181,15 +186,15 @@ class Terrain{
                     "}",
                 "}",
                 "finalColor = clamp(finalColor, 0.0, 1.0);",
-                "vec4 pixelColor1 = texture2D(textured_0, vertUV);",
-                "vec4 pixelColor2 = texture2D(textured_1, vertUV);",
-                "vec4 pixelColor3 = texture2D(textured_2, vertUV);",
+                "vec4 pixelColor1 = texture2D(textured_0, vertUV * 16.0);",
+                "vec4 pixelColor2 = texture2D(textured_1, vertUV * 16.0);",
+                "vec4 pixelColor3 = texture2D(textured_2, vertUV * 16.0);",
                 "vec2 nCoords = vec2(vertUV.s, vertUV.t);",
                 "vec4 heightCoord = texture2D(height_map, nCoords);",
                 "if(heightCoord.x > 0.0 && heightCoord.x < 0.30){",
                     "gl_FragColor = pixelColor1;",
                 "}",
-                "if((heightCoord.x > 0.30) && (heightCoord.x < 0.40)){",
+                "else if((heightCoord.x > 0.30) && (heightCoord.x < 0.40)){",
                     "float nNum = (heightCoord.x - 0.30) / (0.1);" ,
                     "gl_FragColor = (pixelColor2 * nNum) + (pixelColor1 * (1.0 - nNum));",
                 "}",

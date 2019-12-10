@@ -7,8 +7,9 @@ class Rain{
         this.height = _height;
 
         this.material = new THREE.ParticleBasicMaterial({
-            color: 0xFFFFFF,
-            size: 5
+            color: 0xCCCCCC,
+            size: 0.25,
+            transparent: true
         });
 
         for (let i = 0; i < this.particleCount; i++) {
@@ -25,20 +26,19 @@ class Rain{
         this.particleSystem.sortParticles = true;
     }
 
-    getParticleSystem(){
+    getRain(){
         return this.particleSystem;
     }
 
     makeItRain(_deltaTime){
-        this.particleSystem.rotation.y += 0.001;
+        this.particleSystem.rotation.y += 0.00016;
         for (let i = 0; i < this.particleCount; i++) {
             let particle = this.particles.vertices[i];
             if (particle.y < -10) {
                 particle.y = 100;
                 particle.velocity.y = 0;
             }
-            particle.velocity.y -= (Math.random() * .01) * _deltaTime;
-            particle.velocity.multiplyScalar(_deltaTime)
+            particle.velocity.y -= 3 * Math.random() * 1;
             particle.add(particle.velocity);
         }
         this.particleSystem.geometry.__dirtyVertices = true;

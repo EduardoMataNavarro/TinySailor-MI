@@ -36,6 +36,8 @@ class Water{
         });
         
         this.mesh = new THREE.Mesh(this.geometry, this.material);
+        this.mesh.position.x = this.width / 2.0;
+        this.mesh.position.z = this.height / 2.0;
         this.mesh.position.y = 1.5;
     }
 
