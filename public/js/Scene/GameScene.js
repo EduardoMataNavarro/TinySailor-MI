@@ -375,7 +375,7 @@ class GameScene{
 
         if (boatACols != "") {
             if (boatACols == "DockA") {
-                (!this.boatA.hasBag) ? true : false;
+                if(!this.boatA.hasBag) this.boatA.hasBag = true;
             }
             if (boatACols == "DockB") {
                 if (this.boatA.hasBag) {
@@ -397,7 +397,7 @@ class GameScene{
 
         if (boatBCols != "") {
             if (boatBCols == "DockB") {
-                (!this.boatB.hasBag) ? true : false;
+                if(!this.boatB.hasBag) this.boatB.hasBag = true;
             }
             if (boatBCols == "DockA") {
                 if (this.boatB.hasBag) {
