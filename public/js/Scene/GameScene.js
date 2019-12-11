@@ -353,7 +353,6 @@ class GameScene{
         */
 
         if (boatACols != "") {
-            debugger;
             if (boatACols == "DockA") {
                 (!this.boatA.hasBag) ? true : false;
             }
@@ -374,7 +373,6 @@ class GameScene{
         }
 
         if (boatBCols != "") {
-            debugger;
             if (boatBCols == "DockB") {
                 (!this.boatB.hasBag) ? true : false;
             }

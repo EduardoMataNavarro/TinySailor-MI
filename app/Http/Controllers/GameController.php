@@ -27,11 +27,12 @@ class GameController extends Controller
     }
 
     public function SetScore(Request $request){
-        $userId = game_player::create([
+        $scores = game_player::create([
             'game_id' => $request->input('gameId'),
             'player_id' => $request->input('playerId'),
             'score' => $request->input('score'),
         ]);
+        return response()->json(['scores' => $scores]);
     }
 
     public function CreateGame(Request $request){
