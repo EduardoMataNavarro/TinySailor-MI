@@ -2,7 +2,7 @@ class Boat{
     constructor(_playerNum, _model, _position, _health){
         this.direction = "";
         this.rotation = "";
-        this.movMagnitude = 10;
+        this.movMagnitude = 20;
         this.rotMagnitude = 5;
 
         this.prevDirection = "";
