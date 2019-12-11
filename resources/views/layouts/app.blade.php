@@ -14,11 +14,12 @@
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
-    <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Sulphur+Point&display=swap" rel="stylesheet"> 
 
     <!-- Styles -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
     <link href="{{ asset('css/landingStyle.css') }}" rel="stylesheet">
+    <link rel="icon" href="{{ asset('img/icon.ico') }}" type="image/x-icon" />
 </head>
 <body>
     <div id="app">
@@ -71,6 +72,46 @@
         <main class="py-4">
             @yield('content')
         </main>
+        <footer>
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-4">
+                        <h4>Disclaimer</h4>
+                        <br>
+                        <p>proyecto realizado con THREE.js, Laravel y todas las ganas del mundo
+                            <br>
+                            El contenido utilizado para la realización de este proyecto pertenece a sus autores
+                            <br>
+                            No soy dueño del mismo.
+                        </p>
+                    </div>
+                    <div class="col-md-4">
+                        <h4>Juega ahora</h4>
+                        <br>
+                        <p>
+                            Juega ahora esta emocionante aventura para dos personas, en la que consumiras un servicio web
+                            <br>
+                            utilizarás modelos 3D, partículas, texturas, un shader para el terreno 
+                            <br>
+                            sin olvidar de las colisiones que a todos nos gustan
+                            <br>
+                            Da click <a href="/game">aquí</a>
+                        </p>
+                        <br>
+                    </div>
+                    <div class="col-md-4">
+                        <h4>Puntuaciones</h4>
+                        <br>
+                        <p>
+                            Revisa y compara las puntuaciones de tus amigos, hazles saber quién es el mejor!
+                            <br>
+                            Da click <a href="/getscores">aquí</a> para revisar las puntuaciones.
+                        </p>
+                        <br><br>
+                    </div>
+                </div>
+            </div>
+        </footer>
     </div>
 </body>
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>

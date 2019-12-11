@@ -229,7 +229,7 @@ class GameScene{
             return [arrayG, arrayB, instance];
         }).then(function([arrayG, arrayB, instance]){
     
-            Character.loadModel(folder + 'Boat/', 'watercraftPack_009.obj', 'watercraftPack_009.mtl').then((model)=>{
+            Character.loadModel(folder + 'Boat/', 'boat1.obj', 'boat1.mtl').then((model)=>{
                 model.tag = "BoatA";
                 instance.boatA = new Boat(0, model, arrayG[0], 100);
                 instance.boatA.model.scale.set(4, 4, 4);
@@ -237,7 +237,7 @@ class GameScene{
 
                 instance.scene.add(instance.boatA.model);
             });
-            Character.loadModel(folder + 'Boat/', 'watercraftPack_009.obj', 'watercraftPack_009.mtl').then((model)=>{
+            Character.loadModel(folder + 'Boat/', 'boat2.obj', 'boat2.mtl').then((model)=>{
                 model.tag = "BoatB";
                 instance.boatB = new Boat(1, model, arrayG[1], 100);
                 instance.boatB.model.scale.set(4, 4, 4);
@@ -248,7 +248,7 @@ class GameScene{
             return [arrayB, instance]
         }).then(function([arrayB, instance]){
 
-            Character.loadModel(folder + 'Dock/', 'tower.obj', 'tower.mtl').then((model)=>{
+            Character.loadModel(folder + 'Dock/', 'tower1.obj', 'tower1.mtl').then((model)=>{
                 model.tag = "DockA";
                 model.rotateY(180);
                 instance.dockA = new Dock("pointA", model, arrayB[0]);
@@ -257,7 +257,7 @@ class GameScene{
                 instance.collisionObjs.push(instance.dockA.model);
                 instance.scene.add(instance.dockA.model);
             });
-            Character.loadModel(folder + 'Dock/', 'tower.obj', 'tower.mtl').then((model)=>{
+            Character.loadModel(folder + 'Dock/', 'tower2.obj', 'tower2.mtl').then((model)=>{
                 model.tag = "DockB";
                 instance.dockB = new Dock("pointB", model, arrayB[1]);
                 instance.dockB.model.children[0].geometry.computeBoundingBox();
