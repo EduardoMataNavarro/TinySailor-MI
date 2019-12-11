@@ -1,16 +1,13 @@
-# 3ds Max Wavefront OBJ Exporter v0.97b - (c)2007 guruware
-# File Created: 23.11.2019 22:15:12
+# Blender MTL File: 'None'
+# Material Count: 1
 
-newmtl Material
-	Ns 100.0000
-	Ni 1.5000
-	d 1.0000
-	Tr 0.0000
-	Tf 1.0000 1.0000 1.0000 
-	illum 2
-	Ka 0.0000 0.0000 0.0000
-	Kd 0.8000 0.8000 0.8000
-	Ks 0.0588 0.0588 0.0588
-	Ke 0.0000 0.0000 0.0000
-	map_Ka shark.jpg
-	map_Kd shark.jpg
+newmtl Material.001
+Ns 99.999988
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.058800 0.058800 0.058800
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd shark.jpg

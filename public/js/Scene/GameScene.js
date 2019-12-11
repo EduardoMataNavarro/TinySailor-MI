@@ -12,6 +12,7 @@ class GameScene{
 
         this.boatA = null;
         this.boatB = null;
+        this.shark = null;
         this.sharks = [];
         this.stone = null;
         this.dockA = null;
@@ -35,6 +36,10 @@ class GameScene{
         this.scene = new THREE.Scene();
 
         this.clock  = new THREE.Clock();
+        this.sharksTimer = 0;
+        this.sharksLife = 0;
+        this.gameTimer = 0;
+
 
         this.camera0 = new THREE.PerspectiveCamera(75, (this.window.innerWidth/this.window.innerHeight)/2, 0.1, 10000);
         this.camera1 = new THREE.PerspectiveCamera(75, (this.window.innerWidth/this.window.innerHeight)/2, 0.1, 10000);
@@ -226,7 +231,7 @@ class GameScene{
     
             Character.loadModel(folder + 'Boat/', 'watercraftPack_009.obj', 'watercraftPack_009.mtl').then((model)=>{
                 model.tag = "BoatA";
-                instance.boatA = new Boat(0, model, arrayG[0]);
+                instance.boatA = new Boat(0, model, arrayG[0], 100);
                 instance.boatA.model.scale.set(4, 4, 4);
                 instance.boatA.model.add(instance.camera0);
 
@@ -234,7 +239,7 @@ class GameScene{
             });
             Character.loadModel(folder + 'Boat/', 'watercraftPack_009.obj', 'watercraftPack_009.mtl').then((model)=>{
                 model.tag = "BoatB";
-                instance.boatB = new Boat(1, model, arrayG[1]);
+                instance.boatB = new Boat(1, model, arrayG[1], 100);
                 instance.boatB.model.scale.set(4, 4, 4);
                 instance.boatB.model.add(instance.camera1);
                 
@@ -271,11 +276,21 @@ class GameScene{
             return instance;
         }).then(function (instance) {
             Character.loadModel(folder + 'Shark/', 'shark.obj', 'shark.mtl').then((model)=>{
-                for (let i = 0; i < 4; i++) {
-                    model.tag = "Shark";
-                    instance.sharks.push(new Enemy("shark" + i, 3.5, model));    
-                    instance.collisionObjs.push(instance.sharks[i].model);           
-                }
+                model.tag = "shark";
+                instance.shark = model;
+
+                instance.sharks.push(new Enemy(10.5, model));
+                instance.sharks.push(new Enemy(10.5, model));  
+                
+                instance.sharks[0].model.position.set(0, -10, 0);
+                instance.sharks[1].model.position.set(0, -10, 0);
+
+                instance.collisionObjs.push(instance.sharks[0].model);    
+                instance.collisionObjs.push(instance.sharks[1].model);           
+                
+                instance.scene.add(instance.sharks[0].model);
+                instance.scene.add(instance.sharks[1].model);
+
                 console.log(instance.collisionObjs);
             });
             return instance;
@@ -329,7 +344,16 @@ class GameScene{
         var boatACols = this.boatA.checkCollisions(this.collisionObjs);
         var boatBCols = this.boatB.checkCollisions(this.collisionObjs);
 
+        /*
+        this.boatA.box.applyMatrix4(this.boatA.model.modelViewMatrix);
+        this.boatA.model.updateMatrixWorld(true);
+
+        this.boatB.box.applyMatrix4(this.boatB.model.modelViewMatrix);
+        this.boatB.model.updateMatrixWorld(true);
+        */
+
         if (boatACols != "") {
+            debugger;
             if (boatACols == "DockA") {
                 (!this.boatA.hasBag) ? true : false;
             }
@@ -341,12 +365,16 @@ class GameScene{
             }
             if (boatACols == "stone") {
                 this.boatA.health -= 5;
-                if (this.boatA.health <= 0) 
-                    this.isGameFinished = true;
+                console.log("BoatA health: " + this.boatA.health);
+            }
+            if (boatACols == "Shark") {
+                console.log("Ouch! you touched a shark");
+                this.boatA.health -= 10;
             }
         }
 
         if (boatBCols != "") {
+            debugger;
             if (boatBCols == "DockB") {
                 (!this.boatB.hasBag) ? true : false;
             }
@@ -358,12 +386,44 @@ class GameScene{
             }
             if (boatBCols == "stone") {
                 this.boatB.health -= 5;
-                if (this.boatB.health <= 0) 
-                    this.isGameFinished = true;
+                console.log("BoatB Health: " + this.boatB.health);
+            }
+            if (boatBCols == "shark") {
+                console.log("Ouch! you touched a shark");
+                this.boatB.health -= 10;
             }
         }
 
-        let delta = this.clock.getDelta();
+        var delta = this.clock.getDelta();
+
+        if (this.sharks[0] && this.sharks[1]) {
+            this.sharksTimer += delta;
+            if (this.sharksTimer >= 10.0 && (!this.sharks[0].render && !this.sharks[1].render)) {
+                this.sharks[0].render = true;
+                this.sharks[1].render = true;
+    
+                this.sharks[0].spawn(this.boatA.model.position);
+                this.sharks[1].spawn(this.boatB.model.position);
+                console.log("Sharks spawned");
+            }
+        
+            if (this.sharks[0].render || this.sharks[1].render) {
+                this.sharksLife += delta;
+                
+                if (this.sharksLife <= 5.0) {
+                    this.sharks[0].follow(this.boatA.model.position, delta);
+                    this.sharks[1].follow(this.boatB.model.position, delta);
+                }
+                else{
+                    this.sharksLife = 0;
+                    this.sharks[0].render = false;
+                    this.sharks[1].render = false;
+                    this.sharks[0].model.position.set(0, -10, 0);
+                    this.sharks[1].model.position.set(0, -10, 0);
+                    this.sharksTimer = 0;
+                }
+            }
+        }
 
         this.boatA.move(delta);
         this.boatB.move(delta);
@@ -371,6 +431,15 @@ class GameScene{
         this.boatA.rotate(delta);
         this.boatB.rotate(delta);
 
+        if (this.boatB.health <= 0) 
+            this.isGameFinished = true;
+
+        if (this.boatA.health <= 0) 
+            this.isGameFinished = true;
+
+        this.gameTimer += delta;
+        if (this.gameTimer >= 300.0)
+            this.isGameFinished = true;
     }
 
     checkCollisions(){

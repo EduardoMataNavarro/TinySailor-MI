@@ -2,6 +2,7 @@ body{
     margin: 0;
     padding: 0;
     overflow: hidden;
+    font-family: 'Sulphur Point', sans-serif;
 }
 
 .container {
@@ -24,7 +25,7 @@ body{
     font-weight: 750;
     display: none;
 }
-#pause-menu{
+.pause-menu{
     position: fixed;
     display: none;
     width: 45%;
@@ -55,7 +56,7 @@ body{
     padding: 0.35em;
     display: block;
     margin-top: 10px;
-    margin-bottom: 5px;
+    margin-bottom: 10px;
     color: #ffffff;
     background: rgb(74,155,240);
     background: linear-gradient(0deg, rgba(74,155,240,1) 0%, rgba(0,212,255,1) 100%);
@@ -68,4 +69,9 @@ body{
     display: block;
     margin-left: auto;
     margin-right: auto;
+}
+
+.stats{
+    text-align: center;
+    color: rgb(74,155,240);
 }

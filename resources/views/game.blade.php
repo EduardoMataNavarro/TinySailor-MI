@@ -7,6 +7,7 @@
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
         <title>Tiny Sailor</title>
+        <link href="https://fonts.googleapis.com/css?family=Sulphur+Point&display=swap" rel="stylesheet"> 
         <link rel="stylesheet" href="{{ asset('css/gameWindowStyle.css') }}">
     </head>
     <body>
@@ -31,15 +32,25 @@
         <button type="button" id="pause-button">
             X
         </button>
-        <div id="pause-menu">
-            <img src="{{ asset('img/TinyLogo.png') }}" class="tiny-logo" alt="Tiny logo">
-            <button class="launch-menu-button">Continuar</button>
-            <button class="launch-menu-button">Regresar</button>
-        </div>
         <div id="ingame-layout" class="container-fluid">
             <div class="score">
                 
             </div>
+        </div>
+        
+        <div class="pause-menu" id="pause-menu">
+            <img src="{{ asset('img/TinyLogo.png') }}" class="tiny-logo" alt="Tiny logo">
+            <button class="launch-menu-button">Continuar</button>
+            <button class="launch-menu-button">Regresar</button>
+        </div>
+        <div class="pause-menu" id="game-over">
+                <img src="{{ asset('img/TinyLogo.png') }}" class="tiny-logo" alt="Tiny logo">
+                <h3 class="stats" id="game-winner"></h3>
+                <h4 class="stats" id="game-stats1"></h4>
+                <h4 class="stats" id="game-stats2"></h4>
+                <button class="launch-menu-button" id="share-btn">Compartir en messenger</button>
+                <button class="launch-menu-button" id="replay-btn">Volver a jugar</button>
+                <button class="launch-menu-button" id="return-btn">Salir</button>
         </div>
     </body>
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
@@ -57,7 +68,7 @@
     <script src="{{ asset('js/Scene/Water.js') }}"></script>
     <script src="{{ asset('js/Scene/Rain.js') }}"></script>
     <script src="{{ asset('js/Scene/GameScene.js') }}"></script>
-    <!-- <script src="{{ asset('js/FacebookShare.js') }}"></script> -->
+    <script src="{{ asset('js/FacebookShare.js') }}"></script>
     <script src="{{ asset('js/GameManager.js') }}"></script>
 
     <script type="text/javascript">
@@ -97,7 +108,21 @@
 
         $('#pause-button').click(function(){
             $('#pause-menu').toggle(); 
+            render = !render;
         });
+
+        $('#replay-btn').click(function(){
+            location.reload();
+        });
+
+        $('#return-btn').click(function() {
+            location.href = '/home'
+        });
+
+        $('#share-btn').click(function(){
+            ShareScore(scoreA, scoreB);
+        });
+
         
         $(document).keydown(function(e){
             e.preventDefault();

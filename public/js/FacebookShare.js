@@ -1,6 +1,6 @@
 window.fbAsyncInit = function() {
     FB.init({
-      appId      : '2442176882691598',
+      appId      : '451524728879167',
       xfbml      : true,
       version    : 'v4.0'
     });
@@ -16,33 +16,11 @@ window.fbAsyncInit = function() {
    }(document, 'script', 'facebook-jssdk')); 
   
   
-  function shareScore(_score0, _score1) {
+  function ShareScore() {
     FB.ui({
       method:'send',
-      link:'https://tinysailor.herokuapp.com/'
+      link:'https://www.tinysailor.herokuapp.com/'
     },function(respuesta){
   
-    });
-
-    $.ajax({
-        url: '/setscore',
-        method: 'POST',
-        headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-        data: {
-            'gameId' : localStorage.getItem('gameIds'),
-            'playerId' : 1,
-            'score' : _score0
-        }
-    });
-
-    $.ajax({
-        url: '/setscore',
-        method: 'POST',
-        headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-        data: {
-            'gameId' : localStorage.getItem('gameIds'),
-            'playerId' : 2,
-            'score' : _score1
-        }
     });
   }
