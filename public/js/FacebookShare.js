@@ -19,7 +19,7 @@ window.fbAsyncInit = function() {
   function Share() {
     FB.ui({
       method:'send',
-      link:'https://www.tinysailor.herokuapp.com/'
+      link:'https://tinysailor.herokuapp.com/'
     },function(respuesta){
   
     });
