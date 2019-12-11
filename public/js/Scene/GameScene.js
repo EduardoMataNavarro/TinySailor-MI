@@ -145,7 +145,7 @@ class GameScene{
         terrainTexts[2] = 'img/Heightmaps/stone1.jpg';
 
         console.log(terrainHM);
-        Terrain.createTerrain(this.scene, terrainHM, terrainTexts, this.directionalLight, this.ambientColor, this.camera0.position, 150);
+        Terrain.createTerrain(this, terrainHM, terrainTexts, this.directionalLight, this.ambientColor, this.camera0.position, 150);
 
         let waterDiffuse = 'img/Water/water-texture1.jpg';
         let waterBump = 'img/Water/water-texture-nm.jpg';
@@ -344,13 +344,34 @@ class GameScene{
         var boatACols = this.boatA.checkCollisions(this.collisionObjs);
         var boatBCols = this.boatB.checkCollisions(this.collisionObjs);
 
-        /*
-        this.boatA.box.applyMatrix4(this.boatA.model.modelViewMatrix);
-        this.boatA.model.updateMatrixWorld(true);
+        var boatAPos = this.boatA.model.position;
+        var boatBPos = this.boatB.model.position;
 
-        this.boatB.box.applyMatrix4(this.boatB.model.modelViewMatrix);
-        this.boatB.model.updateMatrixWorld(true);
-        */
+        if (this.terrain) {
+            var height = this.terrain.getHeightAt(boatAPos.x, boatAPos.z)
+
+            if(height >= 2.1){
+                let direction = this.boatA.direction;
+
+                if (direction == "forward") 
+                    this.boatA.direction = "backward";
+                else 
+                    if (direction == "backward") 
+                        this.boatA.direction = "forward";
+            }
+            
+            height = this.terrain.getHeightAt(boatBPos.x, boatBPos.z);
+
+            if(height >= 2.1){
+                let direction = this.boatB.direction;
+
+                if (direction == "forward") 
+                    this.boatB.direction = "backward";
+                else 
+                    if (direction == "backward") 
+                        this.boatB.direction = "forward";
+            }
+        }
 
         if (boatACols != "") {
             if (boatACols == "DockA") {
@@ -369,6 +390,7 @@ class GameScene{
             if (boatACols == "Shark") {
                 console.log("Ouch! you touched a shark");
                 this.boatA.health -= 10;
+                this.sharks[0].render = false;
             }
         }
 
@@ -389,6 +411,7 @@ class GameScene{
             if (boatBCols == "shark") {
                 console.log("Ouch! you touched a shark");
                 this.boatB.health -= 10;
+                this.sharks[1].render = false;
             }
         }
 
@@ -409,8 +432,12 @@ class GameScene{
                 this.sharksLife += delta;
                 
                 if (this.sharksLife <= 5.0) {
-                    this.sharks[0].follow(this.boatA.model.position, delta);
-                    this.sharks[1].follow(this.boatB.model.position, delta);
+
+                    if (this.sharks[0].render) 
+                        this.sharks[0].follow(this.boatA.model.position, delta);
+
+                    if (this.sharks[1].render) 
+                        this.sharks[1].follow(this.boatB.model.position, delta);
                 }
                 else{
                     this.sharksLife = 0;
@@ -428,6 +455,12 @@ class GameScene{
 
         this.boatA.rotate(delta);
         this.boatB.rotate(delta);
+
+        $('#health1').text("Salud: " + this.boatA.health);
+        $('#health2').text("Salud: " + this.boatB.health);
+
+        $('#score1').text("Score: " + this.boatA.score);
+        $('#score2').text("Score: " + this.boatB.score);
 
         if (this.boatB.health <= 0) 
             this.isGameFinished = true;

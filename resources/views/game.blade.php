@@ -8,6 +8,7 @@
 
         <title>Tiny Sailor</title>
         <link href="https://fonts.googleapis.com/css?family=Sulphur+Point&display=swap" rel="stylesheet"> 
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
         <link rel="stylesheet" href="{{ asset('css/gameWindowStyle.css') }}">
     </head>
     <body>
@@ -32,16 +33,43 @@
         <button type="button" id="pause-button">
             X
         </button>
-        <div id="ingame-layout" class="container-fluid">
-            <div class="score">
-                
+
+        <div class="container-fluid" id="stats-overlay">
+            <div class="container-fluid fixed-top">
+                <div class="row">
+                    <div class="col-6">
+                        <h2 id="score1" class="stats-display"></h2>
+                    </div>
+                    <div class="col-6">
+                        <h2 id="score2" class="stats-display"></h2>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-6">
+                        <h2 class="stats-display">Boat A</h2>
+                    </div>
+                    <div class="col-6">
+                        <h2 class="stats-display">Boat B</h2>
+                    </div>
+                </div>
+            </div>
+
+            <div class="container-fluid fixed-bottom">
+                <div class="row">
+                    <div class="col-6">
+                        <h2 id="health1" class="stats-display"></h2>
+                    </div>
+                    <div class="col-6">
+                        <h2 id="health2" class="stats-display"></h2>
+                    </div>
+                </div>
             </div>
         </div>
         
         <div class="pause-menu" id="pause-menu">
             <img src="{{ asset('img/TinyLogo.png') }}" class="tiny-logo" alt="Tiny logo">
-            <button class="launch-menu-button">Continuar</button>
-            <button class="launch-menu-button">Regresar</button>
+            <button class="launch-menu-button" id="continue">Continuar</button>
+            <button class="launch-menu-button" id="return">Regresar</button>
         </div>
         <div class="pause-menu" id="game-over">
                 <img src="{{ asset('img/TinyLogo.png') }}" class="tiny-logo" alt="Tiny logo">
@@ -104,6 +132,7 @@
             InitGame(gameStage);
             $('#launch-menu').toggle();
             $('#pause-button').toggle();
+            $('#stats-overlay').toggle();
         });
 
         $('#pause-button').click(function(){
@@ -115,12 +144,21 @@
             location.reload();
         });
 
+        $('#return').click(function(){
+            location.href = '/home';
+        });
+
+        $('#continue').click(function(){
+            $('#pause-menu').toggle();
+            render = true;
+        });
+
         $('#return-btn').click(function() {
-            location.href = '/home'
+            location.href = '/home';
         });
 
         $('#share-btn').click(function(){
-            ShareScore(scoreA, scoreB);
+            Share();
         });
 
         

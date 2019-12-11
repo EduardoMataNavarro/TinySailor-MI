@@ -16,16 +16,10 @@ class Boat{
         
         this.model = _model;
         this.model.updateMatrixWorld(true);
-        debugger;
         
         this.model.position.x = _position.x;
         this.model.position.y = _position.y;
         this.model.position.z = _position.z;
-
-        /*
-        this.box = new THREE.Box3(new THREE.Vector3(), new THREE.Vector3());
-        this.box.setFromObject(this.model);
-        */
     
         this.raycaster = new THREE.Raycaster();
         this.rays = [

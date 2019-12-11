@@ -16,7 +16,7 @@ window.fbAsyncInit = function() {
    }(document, 'script', 'facebook-jssdk')); 
   
   
-  function ShareScore() {
+  function Share() {
     FB.ui({
       method:'send',
       link:'https://www.tinysailor.herokuapp.com/'

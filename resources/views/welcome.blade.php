@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="w-100" id="main-banner">
-			<h5 class="banner-text"><a href="game.html">JUGA AHORA!</a></h5>
+			<h5 class="banner-text"><a href="/game">JUGA AHORA!</a></h5>
 		</div>
 		<div class="container">
 			<h2 class="title">Conoce el juego</h2>
@@ -25,7 +25,7 @@
 		<div class="container-fluid">
 			<div class="row">
 				<div class="col-12" id="play-now-banner">
-					<h1 class="banner-text"><a href="game.html">DA CLICK AQUÍ PARA INICIAR A JUGAR!</a></h1>
+					<h1 class="banner-text"><a href="/game">DA CLICK AQUÍ PARA INICIAR A JUGAR!</a></h1>
 				</div>
 			</div>
 		</div>

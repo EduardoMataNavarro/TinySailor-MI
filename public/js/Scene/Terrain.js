@@ -18,8 +18,9 @@ class Terrain{
 
     static createTerrain(_scene, _map, _dmaps, _dirL, _ambColor, _camerapos, _scaleY){
         Terrain.loadImage(_map, _scaleY).then(function(terrain){
-            _scene.terrain = terrain.loadMaps(_map, _dmaps, _dirL, _ambColor, _camerapos);
-            _scene.add(_scene.terrain);
+            _scene.terrain = terrain;
+            _scene.terrain.mesh = terrain.loadMaps(_map, _dmaps, _dirL, _ambColor, _camerapos);
+            _scene.scene.add(_scene.terrain.mesh);
         }).catch(function(error){
             console.log("No se ha podido generar el terreno " + error);
         });
@@ -97,6 +98,7 @@ class Terrain{
         this.mesh.scale.set(1, this.scaleY, 1);
         this.mesh.position.x = this.width / 2.0;
         this.mesh.position.z = this.height / 2.0;
+        this.mesh.tag = "terrain";
         return this.mesh;
     }
 
@@ -105,6 +107,7 @@ class Terrain{
     }
 
     getHeightAt(_X, _Z){
+
         let width = this.width;
         let height = this.height;
         if (_X < 0 || _X >= width || _Z < 0 || _Z >= height) {
@@ -121,10 +124,10 @@ class Terrain{
         let rz = _Z - iz;
 
         // Edges of cell
-        let a = this.array[(iz * width + ix) * 3 + 1];
-        let b = this.array[(iz * width + (ix + 1)) * 3 + 1];
-        let c = this.array[((iz + 1) * width + (ix + 1)) * 3 + 1];
-        let d = this.array[((iz + 1) * width + ix) * 3 + 1];
+        let a = this.geometry.attributes.position.array[(iz * width + ix) * 3 + 1];
+        let b = this.geometry.attributes.position.array[(iz * width + (ix + 1)) * 3 + 1];
+        let c = this.geometry.attributes.position.array[((iz + 1) * width + (ix + 1)) * 3 + 1];
+        let d = this.geometry.attributes.position.array[((iz + 1) * width + ix) * 3 + 1];
 
         // Interpolate top edge (left and right)
         let e = (a * (1 - rx) + b * rx);
