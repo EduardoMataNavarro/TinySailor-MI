@@ -388,9 +388,10 @@ class GameScene{
                 console.log("BoatA health: " + this.boatA.health);
             }
             if (boatACols == "Shark") {
-                console.log("Ouch! you touched a shark");
-                this.boatA.health -= 10;
-                this.sharks[0].render = false;
+                if (this.sharks[0].render) {
+                    this.boatA.health -= 10;
+                    this.sharks[0].render = false;
+                }
             }
         }
 
@@ -409,9 +410,10 @@ class GameScene{
                 console.log("BoatB Health: " + this.boatB.health);
             }
             if (boatBCols == "shark") {
-                console.log("Ouch! you touched a shark");
-                this.boatB.health -= 10;
-                this.sharks[1].render = false;
+                if (this.sharks[1].render) {
+                    this.boatB.health -= 10;
+                    this.sharks[1].render = false;
+                }
             }
         }
 

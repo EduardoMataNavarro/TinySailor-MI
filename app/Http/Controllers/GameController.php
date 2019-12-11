@@ -15,14 +15,19 @@ class GameController extends Controller
     }
 
     public function GetScores(){
-        $puntuaciones = game_player::selectRaw('game_players.game_id, 
+        $puntuaciones = [
+            'puntuaciones' => game_player::selectRaw('game_players.game_id, 
                                           game_players.score, 
                                           game_players.player_id,
+                                          game_players.salud,
                                           users.name')
                                         ->join('games', 'games.id', '=', 'game_players.game_id')
                                         ->join('users', 'users.id', '=', 'games.user_id')
                                         ->orderBy('score', 'desc')
-                                        ->get();
+                                        ->orderBy('game_players.game_id')
+                                        ->get(),
+        ];
+
         return view('scores', $puntuaciones);
     }
 
@@ -31,6 +36,7 @@ class GameController extends Controller
             'game_id' => $request->input('gameId'),
             'player_id' => $request->input('playerId'),
             'score' => $request->input('score'),
+            'salud' => $request->input('salud'),
         ]);
         return response()->json(['scores' => $scores]);
     }

@@ -8,7 +8,7 @@ class game_player extends Model
 {
     //
     protected $fillable = [
-        'game_id', 'player_id', 'score',
+        'game_id', 'player_id', 'score', 'salud',
     ];
 
     public function Game()

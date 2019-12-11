@@ -21,8 +21,8 @@ class Enemy{
         let boatX = _position.x;
         let boatZ  = _position.z;
 
-        let posX = (Math.random() * 5) + (boatX + 25);
-        let posZ = (Math.random() * 5) + (boatZ + 25);
+        let posX = (Math.random() * 10) + (boatX + 25);
+        let posZ = (Math.random() * 10) + (boatZ + 25);
 
         this.model.position.set(posX, 1.25, posZ);
     }

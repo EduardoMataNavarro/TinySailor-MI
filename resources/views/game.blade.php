@@ -125,7 +125,8 @@
                     'mapType' : gameStage
                 },
                 success: function(result){
-                    localStorage.setItem('gameId', result.id);
+                    console.log(result.game.id);
+                    localStorage.setItem('gameId', parseInt(result.game.id));
                 }
             }).fail(function(result) { console.log(result); });
 
@@ -145,7 +146,7 @@
         });
 
         $('#return').click(function(){
-            location.href = '/home';
+            location.href = '/';
         });
 
         $('#continue').click(function(){
@@ -154,7 +155,7 @@
         });
 
         $('#return-btn').click(function() {
-            location.href = '/home';
+            location.href = '/';
         });
 
         $('#share-btn').click(function(){

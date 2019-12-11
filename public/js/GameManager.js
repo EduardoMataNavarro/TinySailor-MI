@@ -15,16 +15,19 @@ function InitGame(_gameStage){
     scene.buildScene(scene); 
 }
 
-function SaveScores(_score0, _score1, _winner){
+function SaveScores(_score0, _score1, _health0, _health1, _winner){
     $.ajax({
         url: '/setscore',
         method: 'POST',
         headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
         data: {
-            'gameId' : localStorage.getItem('gameIds'),
+            'gameId' : localStorage.getItem('gameId'),
             'playerId' : 1,
-            'score' : _score0
+            'score' : _score0,
+            'salud': _health0
         }
+    }).fail(function(response){
+        console.log(response);
     });
 
     $.ajax({
@@ -32,10 +35,16 @@ function SaveScores(_score0, _score1, _winner){
         method: 'POST',
         headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
         data: {
-            'gameId' : localStorage.getItem('gameIds'),
+            'gameId' : localStorage.getItem('gameId'),
             'playerId' : 2,
-            'score' : _score1
+            'score' : _score1,
+            'salud': _health1
+        },
+        success: function(response){
+            console.log(response.scores);
         }
+    }).fail(function(response){
+        console.log(response);
     });
 
     $('#pause-button').toggle();
@@ -72,7 +81,9 @@ function renderCycle(){
                         }
                         else {
                             render = false;
-                            SaveScores(scene.boatA.score, scene.boatB.score, scene.checkForWinner());
+                            SaveScores(scene.boatA.score, scene.boatB.score, 
+                                       scene.boatA.health, scene.boatB.health,
+                                       scene.checkForWinner());
                         }
                     }
                 }  
